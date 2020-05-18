@@ -1,0 +1,10 @@
+2020年05月18日 21:37:04 Starting master on DESKTOP-2JJJ2KG
+core file size          (blocks, -c) unlimited
+data seg size           (kbytes, -d) unlimited
+file size               (blocks, -f) unlimited
+open files                      (-n) 256
+pipe size            (512 bytes, -p) 8
+stack size              (kbytes, -s) 2032
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 256
+virtual memory          (kbytes, -v) unlimited
