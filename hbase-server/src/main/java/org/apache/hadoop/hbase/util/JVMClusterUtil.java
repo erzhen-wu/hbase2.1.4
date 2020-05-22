@@ -180,6 +180,7 @@ public class JVMClusterUtil {
     // Wait for an active master
     //  having an active master before starting the region threads allows
     //  then to succeed on their connection to master
+
     final int startTimeout = configuration != null ? Integer.parseInt(
         configuration.get("hbase.master.start.timeout.localHBaseCluster", "30000")) : 30000;
     waitForEvent(startTimeout, "active", () -> findActiveMaster(masters) != null);

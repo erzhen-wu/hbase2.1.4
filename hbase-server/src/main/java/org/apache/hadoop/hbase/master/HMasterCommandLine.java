@@ -77,6 +77,7 @@ public class HMasterCommandLine extends ServerCommandLine {
 
     /**
      * 根据传入的参数进行判断
+     * tool.run(toolArgs);方法进来的
      *
      * @param args
      * @return
@@ -242,7 +243,7 @@ public class HMasterCommandLine extends ServerCommandLine {
                 int localZKClusterSessionTimeout =
                         conf.getInt(HConstants.ZK_SESSION_TIMEOUT + ".localHBaseCluster", 10 * 1000);
                 //设置zk的默认超时时间
-                LOG.info(HMasterCommandLine.class+"-----zk超时时间"+String.valueOf(localZKClusterSessionTimeout));
+                LOG.info(HMasterCommandLine.class + "-----zk超时时间" + String.valueOf(localZKClusterSessionTimeout));
                 conf.setInt(HConstants.ZK_SESSION_TIMEOUT, localZKClusterSessionTimeout);
                 LOG.info("启动Starting a zookeeper cluster");
                 int clientPort = zooKeeperCluster.startup(zkDataPath);
@@ -264,11 +265,12 @@ public class HMasterCommandLine extends ServerCommandLine {
                 int regionServersCount = conf.getInt("hbase.regionservers", 1);
                 // Set start timeout to 5 minutes for cmd line start operations
                 conf.setIfUnset("hbase.master.start.timeout.localHBaseCluster", "300000");
-                LOG.info(HMasterCommandLine.class+"-----+hbase.master.start.timeout.localHBaseCluster:300000");
+                LOG.info(HMasterCommandLine.class + "-----+hbase.master.start.timeout.localHBaseCluster:300000");
                 LOG.info("Starting up instance of localHBaseCluster; master=" + mastersCount +
                         ", regionserversCount=" + regionServersCount);
                 //创建一个本地集群对象
-                LOG.info(HMasterCommandLine.class+"--创建一个本地集群对象--new LocalHBaseCluster()");
+                LOG.info(HMasterCommandLine.class + "--创建一个本地集群对象--new LocalHBaseCluster()");
+                //此处运行运行一个本地hbase集群
                 LocalHBaseCluster cluster = new LocalHBaseCluster(conf, mastersCount, regionServersCount,
                         LocalHMaster.class, HRegionServer.class);
                 ((LocalHMaster) cluster.getMaster(0)).setZKCluster(zooKeeperCluster);
@@ -277,7 +279,7 @@ public class HMasterCommandLine extends ServerCommandLine {
                 waitOnMasterThreads(cluster);
             } else {
                 logProcessInfo(getConf());
-                ////生成Hmaster的实例,调用HMaster(finalConfiguration conf)方法
+                ////生成Hmaster的实例,调用HMaster(final Configuration conf)方法
                 HMaster master = HMaster.constructMaster(masterClass, conf);
                 if (master.isStopped()) {
                     LOG.info("Won't bring the Master up as a shutdown is requested");
@@ -320,8 +322,20 @@ public class HMasterCommandLine extends ServerCommandLine {
         return 0;
     }
 
+    /**
+     * 待整理5/22
+     *
+     * @param cluster
+     * @throws InterruptedException
+     */
     private void waitOnMasterThreads(LocalHBaseCluster cluster) throws InterruptedException {
+        /**
+         * 等待master线程
+         */
+        LOG.info(HMasterCommandLine.class + "：waitOnMasterThreads--》等待一个master线程");
+        //获得master线程
         List<JVMClusterUtil.MasterThread> masters = cluster.getMasters();
+        //获得regionservers线程
         List<JVMClusterUtil.RegionServerThread> regionservers = cluster.getRegionServers();
 
         if (masters != null) {
